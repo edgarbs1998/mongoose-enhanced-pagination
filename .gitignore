@@ -133,7 +133,8 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
+# TODO Fix the npm install not building the typescript files 
+# dist
 
 # Gatsby files
 .cache/
