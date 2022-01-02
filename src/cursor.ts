@@ -9,8 +9,10 @@ function processOptions(options: CursorOptions): CursorParams {
   let limit = options.limit ?? 1;
   if (limit < 1) limit = 1;
 
-  const sortField = options.sort?.field ? options.sort.field : "_id";
-  const sortAscending = options.sort?.ascending ? options.sort.ascending : true;
+  // TODO Fix wrong pagination when sorting with a secondary field
+  //const sortField = options.sort?.field ?? "_id";
+  const sortField = "_id";
+  const sortAscending = options.sort?.ascending ?? true;
 
   const next = options.next ? decode(options.next) : undefined;
   const previous = options.previous ? decode(options.previous) : undefined;
@@ -57,6 +59,7 @@ function generateFindQuery(params: CursorParams): FilterQuery<any> {
   };
 }
 
+// TODO Fix wrong pagination when sorting with a secondary field
 function generateSortQuery(params: CursorParams): any {
   const sortAscending =
     (!params.sort.ascending && params.previous) ||
@@ -137,8 +140,7 @@ export function cursorPaginate<T>(
 
   const query = this.find(findQuery)
     .sort(sortQuery)
-    .limit(params.limit + 1)
-    .lean();
+    .limit(params.limit + 1);
 
   // TODO Remove the following workaround when Mongoose add the Query#transform() function to the index.d.ts
   return (query as any).transform((docs: T[]) => {
