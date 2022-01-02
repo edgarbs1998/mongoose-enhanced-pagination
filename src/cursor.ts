@@ -10,7 +10,7 @@ function processOptions(options: CursorOptions): CursorParams {
   if (limit < 1) limit = 1;
 
   // TODO Fix wrong pagination when sorting with a secondary field
-  //const sortField = options.sort?.field ?? "_id";
+  // const sortField = options.sort?.field ?? "_id";
   const sortField = "_id";
   const sortAscending = options.sort?.ascending ?? true;
 
