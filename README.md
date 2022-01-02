@@ -1,10 +1,12 @@
+# WIP - Don't attempt to use at the current state
+
 # mongoose-enchanced-pagination
 
 ## lean
 
 If you need to use virtuals you should add mongoose-lean-virtuals plugin since we use leans
 
-## OLD README
+<!-- ## OLD README
 
 [![Build Status](https://travis-ci.org/mixmaxhq/mongo-cursor-pagination.svg?branch=master)](https://travis-ci.org/mixmaxhq/mongo-cursor-pagination)
 
@@ -373,4 +375,4 @@ To run tests, you first must [start a Mongo server on port 27017](https://mongod
 
 ## Future ideas
 
-- Add support to `search()` to query previous pages.
+- Add support to `search()` to query previous pages. -->
