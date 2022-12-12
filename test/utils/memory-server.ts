@@ -7,7 +7,7 @@ export async function openMongodConnection() {
   // This will create an new instance of "MongoMemoryServer" and automatically start it
   mongod = await MongoMemoryServer.create({ binary: { version: "4.0.27" } });
 
-  connect(mongod.getUri());
+  await connect(mongod.getUri());
 }
 
 export async function closeMongodConnection() {

@@ -3,5 +3,5 @@ export {
   CursorResponse,
   OffsetOptions,
   OffsetResponse,
-} from "./interface";
+} from "./interfaces";
 export * from "./plugin";

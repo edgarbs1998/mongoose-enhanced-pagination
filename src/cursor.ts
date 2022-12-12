@@ -1,17 +1,20 @@
-import { Document, FilterQuery, Model, Query } from "mongoose";
+import {
+  FilterQuery,
+  Model,
+  QueryWithHelpers,
+  HydratedDocument,
+} from "mongoose";
 import { get } from "object-path";
 
 import { CursorOptions, PaginationQueryHelpers } from ".";
-import { CursorParams, CursorResponse } from "./interface";
+import { CursorParams, CursorResponse } from "./interfaces";
 import { decode, encode } from "./utils/urlEncoding";
 
 function processOptions(options: CursorOptions): CursorParams {
   let limit = options.limit ?? 1;
   if (limit < 1) limit = 1;
 
-  // TODO Fix wrong pagination when sorting with a secondary field
-  // const sortField = options.sort?.field ?? "_id";
-  const sortField = "_id";
+  const sortField = options.sort?.field ?? "_id";
   const sortAscending = options.sort?.ascending ?? true;
 
   const next = options.next ? decode(options.next) : undefined;
@@ -132,19 +135,22 @@ function prepareResponse<T>(
 export function cursorPaginate<T>(
   this: Model<T, PaginationQueryHelpers<T>>,
   options: CursorOptions = { limit: 25 }
-): Query<any, Document<T>> & PaginationQueryHelpers<T> {
+): QueryWithHelpers<
+  CursorResponse<T>,
+  HydratedDocument<T, unknown, unknown>,
+  PaginationQueryHelpers<T>,
+  T
+> {
   const params = processOptions(options);
 
   const findQuery = generateFindQuery(params);
   const sortQuery = generateSortQuery(params);
 
-  const query = this.find(findQuery)
+  return this.find(findQuery)
     .sort(sortQuery)
-    .limit(params.limit + 1);
-
-  // TODO Remove the following workaround when Mongoose add the Query#transform() function to the index.d.ts
-  return (query as any).transform((docs: T[]) => {
-    const response = prepareResponse(docs, params);
-    return response;
-  });
+    .limit(params.limit + 1)
+    .transform((docs: T[]) => {
+      const response = prepareResponse(docs, params);
+      return response;
+    });
 }
